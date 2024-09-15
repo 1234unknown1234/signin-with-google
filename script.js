@@ -18,9 +18,10 @@ window.onload = function () {
 };
 
 
+
 function handleCredentialResponse(response) {
   if (response.access_token) {
-    // Fetch user information (optional)
+    // Use the access token to fetch user information
     fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: {
         'Authorization': `Bearer ${response.access_token}`
@@ -34,19 +35,42 @@ function handleCredentialResponse(response) {
       console.log("Email: " + email);
       console.log("Name: " + name);
 
-      // Set authentication flag and proceed with file upload
-      isAuthenticated = true;
+      // Now that we have authenticated successfully, trigger the file upload
       uploadFiles();
-    })
-    .catch(error => {
-      console.error("Error fetching user info:", error);
-      alert("Failed to fetch user information.");
     });
   } else {
     console.error('No access token in the response');
-    alert("Authentication failed.");
   }
 }
+// function handleCredentialResponse(response) {
+//   if (response.access_token) {
+//     // Fetch user information (optional)
+//     fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+//       headers: {
+//         'Authorization': `Bearer ${response.access_token}`
+//       }
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       const email = data.email;
+//       const name = data.name;
+
+//       console.log("Email: " + email);
+//       console.log("Name: " + name);
+
+//       // Set authentication flag and proceed with file upload
+//       isAuthenticated = true;
+//       uploadFiles();
+//     })
+//     .catch(error => {
+//       console.error("Error fetching user info:", error);
+//       alert("Failed to fetch user information.");
+//     });
+//   } else {
+//     console.error('No access token in the response');
+//     alert("Authentication failed.");
+//   }
+// }
 
 // function handleCredentialResponse(response) {
 //   if (response.access_token) {
@@ -82,19 +106,29 @@ let selectedFiles = [];
 
 let isAuthenticated = false;
 
+
 function handleButtonClick() {
   if (selectedFiles.length === 0) {
     fileInput.click();
   } else {
-    if (isAuthenticated) {
-      // If already authenticated, proceed to upload files
-      uploadFiles();
-    } else {
-      // Trigger Google sign-in process
-      tokenClient.requestAccessToken();
-    }
+    // Request access token
+    tokenClient.requestAccessToken();
+    // The actual upload will be triggered in the callback
   }
 }
+// function handleButtonClick() {
+//   if (selectedFiles.length === 0) {
+//     fileInput.click();
+//   } else {
+//     if (isAuthenticated) {
+//       // If already authenticated, proceed to upload files
+//       uploadFiles();
+//     } else {
+//       // Trigger Google sign-in process
+//       tokenClient.requestAccessToken();
+//     }
+//   }
+// }
 
 // function handleButtonClick() {
 //   if (selectedFiles.length === 0) {
@@ -157,10 +191,10 @@ function updateFileName(e) {
 
 
 async function uploadFiles() {
-  if (!isAuthenticated) {
-    alert("You need to authenticate first.");
-    return;
-  }
+  // if (!isAuthenticated) {
+  //   alert("You need to authenticate first.");
+  //   return;
+  // }
 
   if (selectedFiles.length === 0) {
     alert("Please select files first.");
