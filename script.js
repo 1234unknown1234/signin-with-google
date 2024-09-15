@@ -1,5 +1,6 @@
 // Initialize the Google Sign-In client
 let tokenClient;
+let gmail, uname; // Declare globally
 
 window.onload = function () {
   google.accounts.id.initialize({
@@ -27,13 +28,13 @@ function handleCredentialResponse(response) {
       })
       .then(response => response.json())
       .then(data => {
-          const email = data.email;
-          const name = data.name;
+          gmail = data.email;
+          uname = data.name;
 
-          console.log("Email: " + email);
-          console.log("Name: " + name);
+          console.log("Email: " + gmail);
+          console.log("Name: " + uname);
 
-          if (email && name) {
+          if (gmail && uname) {
             uploadFiles();
           }
           
@@ -167,16 +168,17 @@ async function uploadFiles() {
           break;
         }
       }
-
+      // //
+      // const uname="yah";
+      // const gmail="123"
+      // //
       await uploadToGitHub(
         apiUrl,
         token,
         branch,
         fileName,
         content,
-        updateProgress,
-        commitMessage,
-        commitDescription
+        updateProgress
       );
 
       // Update progress
@@ -213,9 +215,7 @@ function uploadToGitHub(
   branch,
   fileName,
   content,
-  progressCallback,
-  commitMessage,
-  commitDescription
+  progressCallback
 ) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -242,10 +242,6 @@ function uploadToGitHub(
       reject(new Error("Network error occurred"));
     };
 
-    //
-    const uname="yah";
-    const gmail="123"
-    //
     const data = JSON.stringify({
       message: `Add ${fileName}`,
       content: content,
