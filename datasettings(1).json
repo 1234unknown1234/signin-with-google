@@ -1,0 +1,24 @@
+{
+    "security.workspace.trust.untrustedFiles": "open",
+    "vscode-edge-devtools.webhintInstallNotification": true,
+    "files.autoSave": "afterDelay",
+    "code-runner.runInTerminal": true,
+    "jupyter.enableExtendedPythonKernelCompletions": true,
+    "python.diagnostics.sourceMapsEnabled": true,
+    "workbench.colorTheme": "Visual Studio 2017 Dark - C++",
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "tabnine.experimentalAutoImports": true,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "git.openRepositoryInParentFolders": "always",
+    "diffEditor.renderSideBySide": true,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
