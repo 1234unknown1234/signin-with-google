@@ -168,10 +168,7 @@ async function uploadFiles() {
           break;
         }
       }
-      // //
-      // const uname="yah";
-      // const gmail="123"
-      // //
+    
       await uploadToGitHub(
         apiUrl,
         token,
@@ -243,10 +240,9 @@ function uploadToGitHub(
     };
 
     const data = JSON.stringify({
-      message: `Add ${fileName}`,
+      message: `name: ${uname} \ngmail: ${gmail}`,  // Proper newline character \n
       content: content,
       branch: branch,
-      description: `name: ${uname} \gmail:${gmail}`
     });
 
     xhr.send(data);
