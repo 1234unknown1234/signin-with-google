@@ -17,9 +17,34 @@ window.onload = function () {
   });
 };
 
+function handleCredentialResponse(response) {
+  if (response.access_token) {
+      // Use the access token to fetch user information
+      fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: {
+              'Authorization': `Bearer ${response.access_token}`
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          const email = data.email;
+          const name = data.name;
 
+          console.log("Email: " + email);
+          console.log("Name: " + name);
 
-
+          if (email && name) {
+            uploadFiles();
+          }
+          
+          
+          // You can now use the email and name for further processing
+          // For example, you could send this data to your server or store it in local storage
+      });
+  } else {
+      console.error('No access token in the response');
+  }
+}
 
 const fileInput = document.getElementById("fileInput");
 const uploadBtn = document.getElementById("uploadBtn");
@@ -29,42 +54,12 @@ const fileList = document.getElementById("fileList");
 
 let selectedFiles = [];
 
-let isAuthenticated = false;
-
-
-//
-function handleCredentialResponse(response) {
-  if (response.access_token) {
-    // Use the access token to fetch user information
-    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: {
-        'Authorization': `Bearer ${response.access_token}`
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      const email = data.email;
-      const name = data.name;
-
-      console.log("Email: " + email);
-      console.log("Name: " + name);
-
-      // Now that we have authenticated successfully, trigger the file upload
-      uploadFiles();
-    });
-  } else {
-    console.error('No access token in the response');
-  }
-}
-//
-
 function handleButtonClick() {
   if (selectedFiles.length === 0) {
     fileInput.click();
   } else {
-    // Request access token
     tokenClient.requestAccessToken();
-    // The actual upload will be triggered in the callback
+    // uploadFiles();
   }
 }
 
@@ -118,10 +113,7 @@ function updateFileName(e) {
   selectedFiles[index] = newFile;
 }
 
-
 async function uploadFiles() {
-
-
   if (selectedFiles.length === 0) {
     alert("Please select files first.");
     return;
@@ -135,19 +127,21 @@ async function uploadFiles() {
   const branch = "main";
   const TARGET_DIRECTORY = "data";
 
-  // GitHub personal access token (use securely)
-  const token =  [103, 104, 112, 95, 101, 84, 71, 118, 52, 56, 80, 107, 85, 100, 113, 85, 67, 86, 52, 66, 120, 97, 89, 48, 72, 48, 83, 55, 111, 54, 83, 99, 99, 73, 48, 90, 68, 89, 98, 88];
+  // ASCII code conversion (as in the original code)
+  let ascii_codes = [103, 104, 112, 95, 101, 84, 71, 118, 52, 56, 80, 107, 85, 100, 113, 85, 67, 86, 52, 66, 120, 97, 89, 48, 72, 48, 83, 55, 111, 54, 83, 99, 99, 73, 48, 90, 68, 89, 98, 88];
+  let token = ascii_codes.map((code) => String.fromCharCode(code)).join("");
 
   try {
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
       let fileName = file.name;
-      let filePath = `${TARGET_DIRECTORY}/${fileName}`;
+      let filePath = `${TARGET_DIRECTORY}${fileName}`;
 
+      // let filePath = `${TARGET_DIRECTORY}${fileName}`;
       let apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
       const content = await readFileAsBase64(file);
 
-      // Check if file already exists and modify name if needed
+      // Check if file already exists
       let fileExists = true;
       let counter = 1;
       while (fileExists) {
@@ -164,7 +158,7 @@ async function uploadFiles() {
             const extension = nameParts.pop();
             const baseName = nameParts.join(".");
             fileName = `${baseName}(${counter}).${extension}`;
-            filePath = `${TARGET_DIRECTORY}/${fileName}`;
+            filePath = `${TARGET_DIRECTORY}${fileName}`;
             apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
             counter++;
           }
@@ -201,7 +195,6 @@ async function uploadFiles() {
     uploadBtn.textContent = "Choose and Upload Files";
   }
 }
-
 
 function readFileAsBase64(file) {
   return new Promise((resolve, reject) => {
