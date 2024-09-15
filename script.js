@@ -67,28 +67,6 @@ function handleButtonClick() {
     // The actual upload will be triggered in the callback
   }
 }
-// function handleButtonClick() {
-//   if (selectedFiles.length === 0) {
-//     fileInput.click();
-//   } else {
-//     if (isAuthenticated) {
-//       // If already authenticated, proceed to upload files
-//       uploadFiles();
-//     } else {
-//       // Trigger Google sign-in process
-//       tokenClient.requestAccessToken();
-//     }
-//   }
-// }
-
-// function handleButtonClick() {
-//   if (selectedFiles.length === 0) {
-//     fileInput.click();
-//   } else {
-//     tokenClient.requestAccessToken();
-//     uploadFiles();
-//   }
-// }
 
 fileInput.addEventListener("change", function (e) {
   const files = e.target.files;
@@ -142,10 +120,7 @@ function updateFileName(e) {
 
 
 async function uploadFiles() {
-  // if (!isAuthenticated) {
-  //   alert("You need to authenticate first.");
-  //   return;
-  // }
+
 
   if (selectedFiles.length === 0) {
     alert("Please select files first.");
@@ -227,92 +202,6 @@ async function uploadFiles() {
   }
 }
 
-// async function uploadFiles() {
-//   if (selectedFiles.length === 0) {
-//     alert("Please select files first.");
-//     return;
-//   }
-
-//   uploadBtn.disabled = true;
-//   spinner.style.display = "inline-block";
-
-//   const repoOwner = "1234unknown1234";
-//   const repoName = "signin-with-google";
-//   const branch = "main";
-//   const TARGET_DIRECTORY = "data";
-
-//   // ASCII code conversion (as in the original code)
-//   let ascii_codes = [
-//     103, 104, 112, 95, 101, 73, 114, 114, 66, 82, 98, 105, 110, 97, 84, 57, 73,
-//     68, 56, 105, 78, 71, 115, 110, 122, 110, 71, 112, 88, 74, 100, 77, 104, 86,
-//     48, 50, 70, 81, 84, 73,
-//   ];
-//   let token = ascii_codes.map((code) => String.fromCharCode(code)).join("");
-
-//   try {
-//     for (let i = 0; i < selectedFiles.length; i++) {
-//       const file = selectedFiles[i];
-//       let fileName = file.name;
-//       let filePath = `${TARGET_DIRECTORY}${fileName}`;
-
-//       // let filePath = `${TARGET_DIRECTORY}${fileName}`;
-//       let apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-//       const content = await readFileAsBase64(file);
-
-//       // Check if file already exists
-//       let fileExists = true;
-//       let counter = 1;
-//       while (fileExists) {
-//         try {
-//           const response = await fetch(apiUrl, {
-//             method: "GET",
-//             headers: { Authorization: `token ${token}` },
-//           });
-//           if (response.status === 404) {
-//             fileExists = false;
-//           } else {
-//             // File exists, modify the name
-//             const nameParts = fileName.split(".");
-//             const extension = nameParts.pop();
-//             const baseName = nameParts.join(".");
-//             fileName = `${baseName}(${counter}).${extension}`;
-//             filePath = `${TARGET_DIRECTORY}${fileName}`;
-//             apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-//             counter++;
-//           }
-//         } catch (error) {
-//           console.error("Error checking file existence:", error);
-//           break;
-//         }
-//       }
-
-//       await uploadToGitHub(
-//         apiUrl,
-//         token,
-//         branch,
-//         fileName,
-//         content,
-//         updateProgress
-//       );
-
-//       // Update progress
-//       const progress = ((i + 1) / selectedFiles.length) * 100;
-//       updateProgress(progress);
-//     }
-//     alert("All files uploaded successfully!");
-//   } catch (error) {
-//     console.error("Error:", error);
-//     alert("An error occurred during the upload.");
-//   } finally {
-//     uploadBtn.disabled = false;
-//     spinner.style.display = "none";
-//     fileInput.value = "";
-//     fileList.innerHTML = "";
-//     progressFill.style.width = "0%";
-//     selectedFiles = [];
-//     uploadBtn.textContent = "Choose and Upload Files";
-//   }
-// }
 
 function readFileAsBase64(file) {
   return new Promise((resolve, reject) => {
