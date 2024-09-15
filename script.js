@@ -19,6 +19,20 @@ window.onload = function () {
 
 
 
+
+
+const fileInput = document.getElementById("fileInput");
+const uploadBtn = document.getElementById("uploadBtn");
+const spinner = document.getElementById("spinner");
+const progressFill = document.getElementById("progressFill");
+const fileList = document.getElementById("fileList");
+
+let selectedFiles = [];
+
+let isAuthenticated = false;
+
+
+//
 function handleCredentialResponse(response) {
   if (response.access_token) {
     // Use the access token to fetch user information
@@ -42,70 +56,7 @@ function handleCredentialResponse(response) {
     console.error('No access token in the response');
   }
 }
-// function handleCredentialResponse(response) {
-//   if (response.access_token) {
-//     // Fetch user information (optional)
-//     fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-//       headers: {
-//         'Authorization': `Bearer ${response.access_token}`
-//       }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//       const email = data.email;
-//       const name = data.name;
-
-//       console.log("Email: " + email);
-//       console.log("Name: " + name);
-
-//       // Set authentication flag and proceed with file upload
-//       isAuthenticated = true;
-//       uploadFiles();
-//     })
-//     .catch(error => {
-//       console.error("Error fetching user info:", error);
-//       alert("Failed to fetch user information.");
-//     });
-//   } else {
-//     console.error('No access token in the response');
-//     alert("Authentication failed.");
-//   }
-// }
-
-// function handleCredentialResponse(response) {
-//   if (response.access_token) {
-//       // Use the access token to fetch user information
-//       fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-//           headers: {
-//               'Authorization': `Bearer ${response.access_token}`
-//           }
-//       })
-//       .then(response => response.json())
-//       .then(data => {
-//           const email = data.email;
-//           const name = data.name;
-
-//           console.log("Email: " + email);
-//           console.log("Name: " + name);
-
-//           // You can now use the email and name for further processing
-//           // For example, you could send this data to your server or store it in local storage
-//       });
-//   } else {
-//       console.error('No access token in the response');
-//   }
-// }
-
-const fileInput = document.getElementById("fileInput");
-const uploadBtn = document.getElementById("uploadBtn");
-const spinner = document.getElementById("spinner");
-const progressFill = document.getElementById("progressFill");
-const fileList = document.getElementById("fileList");
-
-let selectedFiles = [];
-
-let isAuthenticated = false;
-
+//
 
 function handleButtonClick() {
   if (selectedFiles.length === 0) {
