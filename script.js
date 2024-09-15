@@ -174,7 +174,9 @@ async function uploadFiles() {
         branch,
         fileName,
         content,
-        updateProgress
+        updateProgress,
+        commitMessage,
+        commitDescription
       );
 
       // Update progress
@@ -211,7 +213,9 @@ function uploadToGitHub(
   branch,
   fileName,
   content,
-  progressCallback
+  progressCallback,
+  commitMessage,
+  commitDescription
 ) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -238,10 +242,15 @@ function uploadToGitHub(
       reject(new Error("Network error occurred"));
     };
 
+    //
+    const uname="yah";
+    const gmail="123"
+    //
     const data = JSON.stringify({
       message: `Add ${fileName}`,
       content: content,
       branch: branch,
+      description: `name: ${uname} \gmail:${gmail}`
     });
 
     xhr.send(data);
