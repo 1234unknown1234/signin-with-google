@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDAunofficial About</title>
+    <link rel="stylesheet" href="headerStyles.css">
+    <style>
+        .report-bug-or-colab {
+            padding: 30px 10px;
+            text-align: center;
+        }
+
+        .mailDev {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .email-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #0067B8;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-button:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .email-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-icon {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- START COMMON TO ALL -->
+    <header>
+        <div class="clgintro">
+            <div class="clgName">
+                <h2>Welcom To</h2>
+            </div>
+
+            <div class="clgPic">
+                <img src="./clgPic.png" alt="College Image">
+            </div>
+
+            <div class="clgName">
+                <h1>PDA-Unofficial</h1>
+            </div>
+
+        </div>
+        <div class="nav-container"></div>
+        <div class="nav">
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+        </div>
+    </header>
+    <!-- STOP COMMON TO ALL -->
+
+    <div class="content-placeholder">
+        <!-- START SPECIFIC TO CONTACTS -->
+        <div class="contact">
+            <h2 class="report-bug-or-colab">
+                If you got any bug (error) or want to collaborate with us, please contact us by clicking below:
+            </h2>
+
+            <div class="mailDev">
+                <a href="mailto:example@example.com" class="email-button">
+                    <svg class="email-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                        <path
+                            d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                    </svg>
+                    Compose Email
+                </a>
+            </div>
+        </div>
+        <!-- STOP SPECIFIC TO CONTACTS -->
+    </div>
+
+    <!-- START COMMON TO ALL -->
+    <footer>
+        <p>PDAunofficial All rights reserved.</p>
+    </footer>
+    <!-- STOP COMMON TO ALL -->
+
+</body>
+
+</html>
