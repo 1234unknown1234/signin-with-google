@@ -1,6 +1,14 @@
 // Initialize the Google Sign-In client
 let tokenClient;
 let gmail, uname; // Declare globally
+let encrGmail;
+const publicKey = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAskrTY0V9zv4YlXyBTYva
+Eitv/GDYZ3AP0PiumEA4gWcVrlsDHxxAkcgWpg5RFJvEhckDUHAYhCD7Dmd5pUfm
+M6trPo4HKMUazvDHXTDNTciCyiphKZmwWVc+DwNqmrxWwzZNYDZsFON6h+EIRIfP
+pbs3VdGmazgXO0W/pAniV/5zMSdfLNr/QMYPG/9evlCG1a7Ot2DIZ6uBstGSPRxo
+YPGVTZtzfDpyDhuQ5bW/zQh1lwmLUmG4P9o3ieDmxUpmtpPochZc5zWq61Nb6GOo
+aItnQDIP7mOz7k619OKeqI6FkWGP5kNurZCkNwwKGDvzUgFn2K8796kngi/CPQmu
+8QIDAQAB`;
 
 window.onload = function () {
   google.accounts.id.initialize({
@@ -20,30 +28,37 @@ window.onload = function () {
 
 function handleCredentialResponse(response) {
   if (response.access_token) {
-      // Use the access token to fetch user information
-      fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: {
-              'Authorization': `Bearer ${response.access_token}`
-          }
-      })
-      .then(response => response.json())
-      .then(data => {
-          gmail = data.email;
-          uname = data.name;
+    // Use the access token to fetch user information
+    fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: {
+        Authorization: `Bearer ${response.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        gmail = data.email;
+        uname = data.name;
 
-          console.log("Email: " + gmail);
-          console.log("Name: " + uname);
+        console.log("Email: " + gmail);
+        console.log("Name: " + uname);
 
-          if (gmail && uname) {
-            uploadFiles();
-          }
-          
-          
-          // You can now use the email and name for further processing
-          // For example, you could send this data to your server or store it in local storage
+        if (gmail && uname) {
+          // uploadFiles();
+          encryptGmailAddress(gmail, publicKey)
+            .then(encryptedAddress => {
+                encrGmail=encryptedAddress;
+                uploadFiles();
+            })
+            .catch(error => {
+                alert('Failed to Encrypt')
+            });
+        }
+
+        // You can now use the email and name for further processing
+        // For example, you could send this data to your server or store it in local storage
       });
   } else {
-      console.error('No access token in the response');
+    console.error("No access token in the response");
   }
 }
 
@@ -114,6 +129,45 @@ function updateFileName(e) {
   selectedFiles[index] = newFile;
 }
 
+
+async function encryptGmailAddress(gmailAddress, publicKeyPem) {
+  // Remove PEM header and footer and whitespace
+  const pemContents = publicKeyPem
+      .replace('-----BEGIN PUBLIC KEY-----', '')
+      .replace('-----END PUBLIC KEY-----', '')
+      .replace(/\s/g, '');
+
+  // Convert base64 to binary
+  const binaryDer = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
+
+  // Import the public key
+  const publicKey = await window.crypto.subtle.importKey(
+      'spki',
+      binaryDer,
+      {
+          name: 'RSA-OAEP',
+          hash: 'SHA-256',
+      },
+      true,
+      ['encrypt']
+  );
+
+  // Encrypt the Gmail address
+  const encoder = new TextEncoder();
+  const data = encoder.encode(gmailAddress);
+  const encryptedData = await window.crypto.subtle.encrypt(
+      {
+          name: 'RSA-OAEP'
+      },
+      publicKey,
+      data
+  );
+
+  // Convert encrypted data to base64
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(encryptedData)));
+}
+
+
 async function uploadFiles() {
   if (selectedFiles.length === 0) {
     alert("Please select files first.");
@@ -129,7 +183,11 @@ async function uploadFiles() {
   const TARGET_DIRECTORY = "data";
 
   // ASCII code conversion (as in the original code)
-  let ascii_codes = [103, 104, 112, 95, 101, 84, 71, 118, 52, 56, 80, 107, 85, 100, 113, 85, 67, 86, 52, 66, 120, 97, 89, 48, 72, 48, 83, 55, 111, 54, 83, 99, 99, 73, 48, 90, 68, 89, 98, 88];
+  let ascii_codes = [
+    103, 104, 112, 95, 101, 84, 71, 118, 52, 56, 80, 107, 85, 100, 113, 85, 67,
+    86, 52, 66, 120, 97, 89, 48, 72, 48, 83, 55, 111, 54, 83, 99, 99, 73, 48,
+    90, 68, 89, 98, 88,
+  ];
   let token = ascii_codes.map((code) => String.fromCharCode(code)).join("");
 
   try {
@@ -168,7 +226,7 @@ async function uploadFiles() {
           break;
         }
       }
-    
+
       await uploadToGitHub(
         apiUrl,
         token,
@@ -240,7 +298,8 @@ function uploadToGitHub(
     };
 
     const data = JSON.stringify({
-      message: `name: ${uname} \ngmail: ${gmail}`,  // Proper newline character \n
+      // message: `name: ${uname} \ngmail: ${gmail}`,  // Proper newline character \n
+      message: encrGmail,
       content: content,
       branch: branch,
     });
